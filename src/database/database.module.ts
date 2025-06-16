@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { config } from 'process';
 import User from 'src/user/entities/user.entity';
 import Ejercicio from 'src/ejercicio/entities/ejercicio.entity';
+import RefreshToken from 'src/common/entities/refresh-token.entity';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import Ejercicio from 'src/ejercicio/entities/ejercicio.entity';
         entities: [User, Ejercicio],
       }),
     }),
-    TypeOrmModule.forFeature([User, Ejercicio]),
+    TypeOrmModule.forFeature([User, Ejercicio, RefreshToken]),
   ],
   exports: [DatabaseService],
   providers: [DatabaseService],

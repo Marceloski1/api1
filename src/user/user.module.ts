@@ -6,11 +6,12 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from 'src/database/database.module';
 import AdminSeederService from './seeders/admin-seeder.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Module({
   imports: [ConfigModule, DatabaseModule],
   controllers: [UserController],
-  providers: [UserService, AdminSeederService],
+  providers: [UserService, AdminSeederService, JwtAuthGuard, RolesGuard],
   exports: [UserService, AdminSeederService],
 })
 export class UserModule {}

@@ -37,12 +37,13 @@ export default class User {
   })
   role: Role;
 
-  @OneToOne(() => RefreshToken, (refreshToken) => refreshToken.user, {
+  /*@OneToOne(() => RefreshToken, (refreshToken) => refreshToken.user, {
     nullable: true,
     onDelete: 'SET NULL',
+    cascade: true,
   })
   refreshToken?: RefreshToken;
-
+*/
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {

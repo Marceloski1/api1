@@ -10,7 +10,7 @@ import { EjercicioService } from 'src/ejercicio/ejercicio.service';
 export class ReportsService {
   constructor(
     private readonly dataBaseService: DatabaseService,
-    @Inject(forwardRef(() => Ejercicio))
+    @Inject(forwardRef(() => EjercicioService))
     private readonly ejercicioService: EjercicioService,
     private readonly mailService: MailService,
   ) {}

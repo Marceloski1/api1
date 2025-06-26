@@ -25,7 +25,7 @@ export default class User {
   @Column('character varying', { length: 255 })
   phone: string;
 
-  @Column('character varying', { length: 10 })
+  @Column('character varying', { length: 100 })
   password: string;
 
   @Column('boolean')
@@ -37,13 +37,12 @@ export default class User {
   })
   role: Role;
 
-  /*@OneToOne(() => RefreshToken, (refreshToken) => refreshToken.user, {
+  @OneToOne(() => RefreshToken, (refreshToken) => refreshToken.user, {
     nullable: true,
     onDelete: 'SET NULL',
-    cascade: true,
   })
   refreshToken?: RefreshToken;
-*/
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {

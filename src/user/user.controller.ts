@@ -23,6 +23,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiProperty,
   ApiResponse,
   ApiResponseProperty,
   ApiTags,
@@ -33,20 +34,28 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Role, Rols } from 'src/common/decorators/rols.decorator';
 import User from './entities/user.entity';
 import PaginatedOutDto from 'src/common/dto/pagination/paginated.out.dto';
-import UserOutDto from './dto/out/user.out.dto';
+import UsersOutDto from './dto/out/user.out.dto';
 import UserSearchInDto from './dto/in/user.search.in.dto';
 
 @Controller('v1/users')
 @ApiTags('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
-@ApiUnauthorizedResponse({ description: 'Unauthorized' })
+@ApiUnauthorizedResponse({ description: 'Unautorizxed' })
 @ApiForbiddenResponse({ description: 'Forbidden' })
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('debug-metadata')
+  @Rols(Role.ADMIN)
+  @ApiOperation({ summary: 'Obtener metadata' })
+  debugMetadata() {
+    const roles = Reflect.getMetadata('rols', this.debugMetadata);
+    return { roles };
+  }
+
   @Get('')
-  @Rols(Role.USER, Role.TRAINER, Role.TRAINER)
+  @Rols(Role.ADMIN)
   @ApiResponse({ description: 'Ok', type: [User] })
   @ApiOperation({ summary: 'Get all Users' })
   async getAll() {
@@ -55,13 +64,13 @@ export class UserController {
 
   @Get('/search')
   @Rols(Role.ADMIN)
-  @ApiOkResponse({ description: 'Ok', type: UserOutDto })
+  @ApiOkResponse({ description: 'Ok', type: UsersOutDto })
   @ApiNotFoundResponse({ description: 'Not Found' })
   @ApiBadRequestResponse({ description: 'Bad Request' })
   @ApiOperation({ summary: 'Get User by its id' })
   async get(
     @Query() dto: UserSearchInDto,
-  ): Promise<PaginatedOutDto<UserOutDto>> {
+  ): Promise<PaginatedOutDto<UsersOutDto>> {
     return this.userService.search(dto);
   }
 
@@ -69,13 +78,13 @@ export class UserController {
   @Rols(Role.ADMIN)
   @ApiBadRequestResponse({ description: 'Bad Request' })
   @ApiNotFoundResponse({ description: 'Not Found' })
-  @ApiOkResponse({ description: 'Ok', type: UserOutDto })
+  @ApiOkResponse({ description: 'Ok', type: UsersOutDto })
   async getById(@Param('id', ParseIntPipe) id: number) {
     return this.userService.getById(id);
   }
 
   @Post('')
-  @ApiCreatedResponse({ description: 'Ok', type: UserOutDto })
+  @ApiCreatedResponse({ description: 'Ok', type: UsersOutDto })
   @ApiOkResponse({ description: 'Ok' })
   @ApiBadRequestResponse({ description: 'Bad Request' })
   @ApiConflictResponse({

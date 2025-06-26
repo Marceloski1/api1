@@ -7,6 +7,7 @@ import { MailModule } from './mail/mail.module';
 import { ConfigModule } from '@nestjs/config';
 import { envSchema } from './config/env.schema';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     AuthModule,
     DatabaseModule,
     MailModule,
+    ReportsModule,
   ],
 })
 export class AppModule {}

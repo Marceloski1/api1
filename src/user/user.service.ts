@@ -8,7 +8,7 @@ import { CreateUserDto } from './dto/in/create-user.in.dto';
 import { UpdateUserDto } from './dto/in/update-user.in.dto';
 import User from './entities/user.entity';
 import DatabaseService from 'src/database/database.service';
-import UserOutDto from './dto/out/user.out.dto';
+import UsersOutDto from './dto/out/user.out.dto';
 import createPatchFields from 'src/common/dto/patch/patch-field.util';
 import { JwtService } from '@nestjs/jwt';
 import UserSearchInDto from './dto/in/user.search.in.dto';
@@ -26,7 +26,7 @@ export class UserService {
 
   public async search(
     dto: UserSearchInDto,
-  ): Promise<PaginatedOutDto<UserOutDto>> {
+  ): Promise<PaginatedOutDto<UsersOutDto>> {
     const queryBuilder = this.databaseService.user.createQueryBuilder('user');
 
     //Filterin
@@ -76,13 +76,13 @@ export class UserService {
     };
   }
 
-  public async getAll(): Promise<UserOutDto[]> {
+  public async getAll(): Promise<UsersOutDto[]> {
     const users = await this.databaseService.user.find();
 
     return users.map((user) => this.toOutDto(user));
   }
 
-  public async getById(id: number): Promise<UserOutDto> {
+  public async getById(id: number): Promise<UsersOutDto> {
     const user = await this.databaseService.user.findOne({
       where: { id },
     });
@@ -92,7 +92,7 @@ export class UserService {
     return this.toOutDto(user);
   }
 
-  public async getByName(name: string): Promise<UserOutDto> {
+  public async getByName(name: string): Promise<UsersOutDto> {
     const user = await this.databaseService.user.findOne({
       where: { name },
     });
@@ -190,7 +190,7 @@ export class UserService {
     this.logger.log(`Deleted user with ID ${id}`);
   }
 
-  private toOutDto(user: User): UserOutDto {
+  private toOutDto(user: User): UsersOutDto {
     return {
       id: user.id,
       name: user.name,

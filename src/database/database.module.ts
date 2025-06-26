@@ -20,7 +20,7 @@ import RefreshToken from 'src/common/entities/refresh-token.entity';
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_DATABASE'),
         synchronize: true,
-        entities: [User, Ejercicio],
+        entities: [User, Ejercicio, RefreshToken],
       }),
     }),
     TypeOrmModule.forFeature([User, Ejercicio, RefreshToken]),

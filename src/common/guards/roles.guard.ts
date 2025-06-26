@@ -5,6 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { ROLS_KEY } from '../decorators/rols.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -23,6 +24,7 @@ export class RolesGuard implements CanActivate {
 
     const requiredRoles = this.getRequiredRoles(context);
 
+    console.log(JSON.stringify(requiredRoles));
     if (!requiredRoles.includes(user.role))
       throw new ForbiddenException('Access denied');
 
@@ -31,6 +33,6 @@ export class RolesGuard implements CanActivate {
 
   private getRequiredRoles(context: ExecutionContext): string[] {
     const handler = context.getHandler();
-    return Reflect.getMetadata('roles', handler) || [];
+    return Reflect.getMetadata(ROLS_KEY, handler) || [];
   }
 }

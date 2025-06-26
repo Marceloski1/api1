@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from 'src/common/decorators/rols.decorator';
 
-export default class UserOutDto {
+export default class UsersOutDto {
   @ApiProperty()
   id: number;
 

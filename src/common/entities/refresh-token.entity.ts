@@ -17,10 +17,10 @@ export default class RefreshToken {
   @Index({ unique: true })
   userId: number;
 
-  /*@OneToOne(() => User, (user) => user.refreshToken, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @OneToOne(() => User, (user) => user.refreshToken, { onDelete: 'CASCADE' })
+  @JoinColumn()
   user: User;
-*/
+
   @Column()
   refreshToken: string;
 }

@@ -35,6 +35,7 @@ export class AuthService {
       userId: user.id,
       role: user.role,
     };
+    this.logger.log(JSON.stringify(payload));
 
     const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(
@@ -139,7 +140,7 @@ export class AuthService {
     const newUser = this.dataBaseService.user.create({
       email: dto.email,
       password: dto.password,
-      role: Role.USER,
+      role: Role.ADMIN,
       name: dto.name,
       isActive: true,
       phone: dto.phone,

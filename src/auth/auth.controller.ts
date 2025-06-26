@@ -73,6 +73,7 @@ export class AuthController {
   }
 
   @Post('register')
+  @Rols(Role.TRAINER)
   @ApiCreatedResponse({
     description: 'Register Customer Successful',
     type: UserOutDto,

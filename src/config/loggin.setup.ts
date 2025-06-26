@@ -11,7 +11,7 @@ export default function setupLogging(
 
   logger.log('Listening in port ' + port);
 
-  const address = app.getHttpServer().addres();
+  const address = app.getHttpServer().address();
   const host = address.address === '::' ? 'localhost' : address.address;
   const appUrl = `http://${host}:${address.port}`;
   logger.log(`Swagger is available on: ${appUrl}${swaggerPath}`);

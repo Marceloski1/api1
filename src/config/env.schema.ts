@@ -1,7 +1,7 @@
 import * as Joi from 'joi';
 
 export const envSchema = Joi.object({
-  APP_PORT: Joi.string().required(),
+  APP_PORT: Joi.number().default(4001).required(),
   SECRET_KEY: Joi.string().required(),
   SEED_ADMIN_EMAIL: Joi.string().required(),
   SEED_ADMIN_PASSWORD: Joi.string().required(),

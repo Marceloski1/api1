@@ -10,5 +10,13 @@ export const envSchema = Joi.object({
   DB_DATABASE: Joi.string().required(),
   DB_USERNAME: Joi.string().required(),
   DB_PASSWORD: Joi.string().required(),
+  JWT_VERIFICATION_TOKEN_EXPIRATION_TIME: Joi.number().required(),
+  MAIL_RESET_PASSWORD_URL: Joi.string().required(),
+  MAIL_HOST: Joi.string().required(),
+  MAIL_PORT: Joi.number().required(),
+  MAIL_USER: Joi.string().required(),
+  MAIL_PASSWORD: Joi.string().required(),
+  SENDER_EMAIL: Joi.string().required(),
+  SENDER_NAME: Joi.string().required(),
   SWAGGER_PASSWORD: Joi.string().required(),
 }).unknown();

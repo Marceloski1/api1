@@ -76,12 +76,14 @@ export class UserService {
     };
   }
 
+  //Get all users
   public async getAll(): Promise<UsersOutDto[]> {
     const users = await this.databaseService.user.find();
 
     return users.map((user) => this.toOutDto(user));
   }
 
+  //Get user by id
   public async getById(id: number): Promise<UsersOutDto> {
     const user = await this.databaseService.user.findOne({
       where: { id },
@@ -92,6 +94,7 @@ export class UserService {
     return this.toOutDto(user);
   }
 
+  //Get user by name
   public async getByName(name: string): Promise<UsersOutDto> {
     const user = await this.databaseService.user.findOne({
       where: { name },
@@ -103,6 +106,7 @@ export class UserService {
     return this.toOutDto(user);
   }
 
+  //Create a new user
   public async post(createUserDto: CreateUserDto) {
     const existName = await this.databaseService.user.findOne({
       where: { name: createUserDto.name },
@@ -137,6 +141,7 @@ export class UserService {
     return this.toOutDto(newUser);
   }
 
+  //Update a user alredy exist
   public async update(id: number, updateUserDto: UpdateUserDto) {
     if (updateUserDto.name) {
       const user = await this.databaseService.user.findOne({
@@ -172,6 +177,7 @@ export class UserService {
     this.logger.log({ ...patchDto });
   }
 
+  //Delete one usr by id and name
   public async delete(id: number, name: string): Promise<void> {
     const user = await this.databaseService.user.findOne({
       where: { name },

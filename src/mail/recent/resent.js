@@ -4,10 +4,10 @@ import { Resend } from 'resend';
 @Injectable()
 export class MailService{
 
-    const resend = new Resend('re_E94WXrgj_HxRG5R7d9rYo3gkZ44j8ba6Y');
+    
 
     constructor(){
-        this.resend = new Resend('re_123456789') ; //Usar clave de Api de Resend ...ummmm
+        this.resend = new Resend('re_g1hx8Mtq_Muu3VrishxSKZcc5bTtQZfqm') ; //Usar clave de Api de Resend ...ummmm
     }
     async sendMail(){
         try{

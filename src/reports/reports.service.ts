@@ -5,6 +5,8 @@ import DatabaseService from 'src/database/database.service';
 import Ejercicio from 'src/ejercicio/entities/ejercicio.entity';
 import { MailService } from 'src/mail/mail.service';
 import { EjercicioService } from 'src/ejercicio/ejercicio.service';
+import { from, Subject } from 'rxjs';
+import ForgotPasswordTemplate from 'src/mail/templates/forgot-password.template';
 
 @Injectable()
 export class ReportsService {
@@ -17,4 +19,10 @@ export class ReportsService {
 
   private readonly logger = new Logger(ReportsService.name);
   private readonly USERNAME: string = 'Marcelo';
+
+  private forgotTemplate: ForgotPasswordTemplate;
+
+  async sendMailWithResendService() {
+    await this.mailService.sendWithResend();
+  }
 }

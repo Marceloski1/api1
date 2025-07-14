@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -10,6 +11,7 @@ import DatabaseService from 'src/database/database.service';
 import RegisterInDto from './dto/in/register.in.dto';
 import UserOutDto from './dto/out/user.out.dto';
 import { Role } from 'src/common/decorators/rols.decorator';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -18,8 +20,10 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly dataBaseService: DatabaseService,
+    private readonly mailerService: MailService,
   ) {}
 
+  //Auth Login Service
   async login(email: string, password: string) {
     const user = await this.dataBaseService.user.findOne({
       where: { email, isActive: true },
@@ -64,6 +68,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
+  //Auth Refresh token Service
   async refresh(oldRefreshToken: string) {
     try {
       const payload = this.jwtService.verify(oldRefreshToken);
@@ -120,6 +125,7 @@ export class AuthService {
     }
   }
 
+  //Auth Register Service
   async register(dto: RegisterInDto): Promise<UserOutDto> {
     const existingUserName = await this.dataBaseService.user.findOne({
       where: { name: dto.name },
@@ -140,7 +146,7 @@ export class AuthService {
     const newUser = this.dataBaseService.user.create({
       email: dto.email,
       password: dto.password,
-      role: Role.ADMIN,
+      role: Role.USER,
       name: dto.name,
       isActive: true,
       phone: dto.phone,
@@ -160,6 +166,7 @@ export class AuthService {
     };
   }
 
+  //Auth Service Change Password
   async changePassword(
     userId: number,
     oldPassword: string,
@@ -178,5 +185,54 @@ export class AuthService {
     await this.dataBaseService.user.save(user);
 
     this.logger.log(`Updated user Password with ID ${user.id}`);
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    const user = await this.dataBaseService.user.findOne({
+      where: { email },
+      // , relations: ['ejercicio']
+    });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    const payload = { email: email };
+    const token = this.jwtService.sign(payload);
+
+    return this.mailerService.sendResetPasswordEmail(email, user.name, token);
+  }
+
+  async resetPassword(resetToken: string, newPassword: string): Promise<void> {
+    const email = await this.decodeConfirmationToken(resetToken);
+
+    const user = await this.dataBaseService.user.findOne({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    user.password = newPassword;
+
+    await this.dataBaseService.user.save(user);
+  }
+
+  private async decodeConfirmationToken(token: string) {
+    try {
+      const payload = await this.jwtService.verify(
+        token,
+        // Podemos agregar el secreto como se muestra aca
+        // secret: this.configService.get('SECRET_KEY')
+      );
+
+      if (typeof payload === 'object' && 'email' in payload) {
+        return payload.email;
+      }
+      throw new UnauthorizedException();
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
   }
 }

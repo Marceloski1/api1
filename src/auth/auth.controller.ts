@@ -30,6 +30,8 @@ import ChangePasswordInDto from './dto/in/change-password.in.dto';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Role, Rols } from 'src/common/decorators/rols.decorator';
+import ForgotPasswordInDto from './dto/in/forgotPassword.in.dto';
+import ResetPasswordInDto from './dto/in/reset-password.in.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -106,5 +108,25 @@ export class AuthController {
       dto.oldPassword,
       dto.newPassword,
     );
+  }
+
+  @Post('forgot-password')
+  @Rols(Role.USER, Role.ADMIN)
+  @ApiOkResponse({ description: 'Ok' })
+  @ApiBadRequestResponse({ description: `Bad Request` })
+  @ApiNotFoundResponse({ description: 'Not Found' })
+  @ApiOperation({ summary: 'Sends an email to user to resed his password' })
+  async forgotPassword(@Body() dto: ForgotPasswordInDto): Promise<void> {
+    await this.authService.forgotPassword(dto.email);
+  }
+
+  @Post('reset-password')
+  @Rols(Role.USER, Role.ADMIN)
+  @ApiOkResponse({ description: 'Ok' })
+  @ApiBadRequestResponse({ description: `Bad Request` })
+  @ApiNotFoundResponse({ description: 'Not Found' })
+  @ApiOperation({ summary: 'Complete reset password progress' })
+  async resetPassword(@Body() dto: ResetPasswordInDto): Promise<void> {
+    await this.authService.resetPassword(dto.resetToken, dto.newPassword);
   }
 }

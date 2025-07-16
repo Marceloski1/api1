@@ -12,7 +12,7 @@ import { NotFoundException } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = app.get(ConfigService).get<number>('APP_PORT');
-
+  //app.useGlobalFilters(new HttpExceptionFilter());
   setupSwagger(app, SWAGGER_PATH);
   initSetup(app);
   await seedersSetup(app);

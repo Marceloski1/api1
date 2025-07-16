@@ -8,6 +8,8 @@ import {
   Delete,
   Request,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -32,6 +34,7 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Role, Rols } from 'src/common/decorators/rols.decorator';
 import ForgotPasswordInDto from './dto/in/forgotPassword.in.dto';
 import ResetPasswordInDto from './dto/in/reset-password.in.dto';
+import ForbiddenException from 'src/common/exceptions/forbidden.exception';
 
 @Controller('auth')
 export class AuthController {
@@ -44,14 +47,29 @@ export class AuthController {
   @ApiCreatedResponse({ description: 'Login successful', type: AuthOutDto })
   @ApiOperation({ summary: 'Autenticate into system' })
   async login(@Body() body: LoginInDto): Promise<AuthOutDto> {
-    const { accessToken, refreshToken } = await this.authService.login(
-      body.email,
-      body.password,
-    );
-    return {
-      accessTokem: accessToken,
-      refreshToken: refreshToken,
-    };
+    try {
+      const { accessToken, refreshToken } = await this.authService.login(
+        body.email,
+        body.password,
+      );
+      return {
+        accessTokem: accessToken,
+        refreshToken: refreshToken,
+      };
+    } catch (err) {
+      /*throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Error, usuario no valido',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: err,
+        },
+      );
+      */
+      throw new ForbiddenException(err);
+    }
   }
 
   @Post('refresh')
@@ -121,7 +139,7 @@ export class AuthController {
   }
 
   @Post('reset-password')
-  @Rols(Role.USER, Role.ADMIN)
+  //@Rols(Role.USER, Role.ADMIN)
   @ApiOkResponse({ description: 'Ok' })
   @ApiBadRequestResponse({ description: `Bad Request` })
   @ApiNotFoundResponse({ description: 'Not Found' })

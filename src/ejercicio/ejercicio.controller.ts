@@ -9,6 +9,8 @@ import {
   UseGuards,
   ParseIntPipe,
   Request,
+  UseFilters,
+  ForbiddenException,
 } from '@nestjs/common';
 import { EjercicioService } from './ejercicio.service';
 
@@ -30,10 +32,12 @@ import { Role, Rols } from 'src/common/decorators/rols.decorator';
 import { CreateEjercicioInDto } from './dto/in/create-ejercicio.dto';
 import EjercicioOutDto from './dto/out/ejercicio.out.dto';
 import { UpdateEjercicioInDto } from './dto/in/update-ejercicio.dto';
+import { HttpExceptionFilter } from 'src/common/exceptions/http.exception.filter';
 
 @ApiBearerAuth()
 @ApiTags('v1/ejercicio')
-@UseGuards(RolesGuard)
+//@UseGuards(RolesGuard)
+//@UseFilters(new HttpExceptionFilter())
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Unautorized' })
 @Controller('v1/ejercicio')

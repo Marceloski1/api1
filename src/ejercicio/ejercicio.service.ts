@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { CreateEjercicioInDto } from './dto/in/create-ejercicio.dto';
 import { UpdateEjercicioInDto } from './dto/in/update-ejercicio.dto';
-import { EjercicioI } from './interface/ejercicioI.interface';
 import Ejercicio from './entities/ejercicio.entity';
 import DatabaseService from 'src/database/database.service';
 import EjercicioOutDto from './dto/out/ejercicio.out.dto';
@@ -21,17 +20,13 @@ export class EjercicioService {
   async createEjercicio(createEjercicioInDto: CreateEjercicioInDto) {
     const name = createEjercicioInDto.name;
     this.existEjercicioByName(name);
-
     const newEjercicio = await this.dataBaseService.ejercicio.create({
       name: createEjercicioInDto.name,
       description: createEjercicioInDto.description,
       muscle: createEjercicioInDto.muscle,
     });
-
     await this.dataBaseService.ejercicio.save(newEjercicio);
-
     this.logger.log('Create a new ejercicio');
-
     return this.toOutDto(newEjercicio);
   }
 
@@ -39,7 +34,6 @@ export class EjercicioService {
     this.notExistEjercicioByName(name);
     //Revisar logica para asignar los ejercicios
     const ejericioDelete = await this.dataBaseService.ejercicio.delete(id);
-
     if (ejericioDelete.affected === 0) {
       throw new NotFoundException(`Ejercicio with ID ${id} not found`);
     }
@@ -52,9 +46,7 @@ export class EjercicioService {
     userEjercicioiNDto: UpdateEjercicioInDto,
   ): Promise<void> {
     const ejercicio = await this.notExistEjercicio(id);
-
     const patchDto = createPatchFields(userEjercicioiNDto);
-
     await this.dataBaseService.ejercicio.update(id, patchDto);
     this.logger.log(`Updated ejercicio with ID ${id}`);
     this.logger.log({ ...patchDto });
@@ -62,13 +54,11 @@ export class EjercicioService {
 
   async getAllEjercicio(): Promise<EjercicioOutDto[]> {
     const ejercicios = await this.dataBaseService.ejercicio.find();
-
     return ejercicios.map((ejercicio) => this.toOutDto(ejercicio));
   }
 
   async getEjercicio(id: number): Promise<EjercicioOutDto> {
     const ejercicio = await this.notExistEjercicio(id);
-
     return this.toOutDto(ejercicio);
   }
 

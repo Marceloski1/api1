@@ -11,6 +11,8 @@ import {
   Request,
   UseFilters,
   ForbiddenException,
+  HttpStatus,
+  UsePipes,
 } from '@nestjs/common';
 import { EjercicioService } from './ejercicio.service';
 
@@ -33,6 +35,9 @@ import { CreateEjercicioInDto } from './dto/in/create-ejercicio.dto';
 import EjercicioOutDto from './dto/out/ejercicio.out.dto';
 import { UpdateEjercicioInDto } from './dto/in/update-ejercicio.dto';
 import { HttpExceptionFilter } from 'src/common/exceptions/http.exception.filter';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+import { createEjercicioInSchema } from './schemas/create-ejercicio.schema';
+import { ValidationPipe } from 'src/common/pipes/validation.pipe';
 
 @ApiBearerAuth()
 @ApiTags('v1/ejercicio')
@@ -53,7 +58,10 @@ export class EjercicioController {
   @ApiConflictResponse({
     description: 'Conflict (Other user with name or Email)',
   })
-  async create(@Body() createEjercicioDto: CreateEjercicioInDto) {
+  //@UsePipes(new ZodValidationPipe(createEjercicioInSchema))
+  async create(
+    @Body(new ValidationPipe()) createEjercicioDto: CreateEjercicioInDto,
+  ) {
     return await this.ejercicioService.createEjercicio(createEjercicioDto);
   }
 
@@ -73,7 +81,10 @@ export class EjercicioController {
   @ApiNotFoundResponse({ description: 'Not Found' })
   @ApiBadRequestResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Forbidden Response' })
-  async findOne(@Param('id') id: number) {
+  async findOne(
+    @Param('id')
+    id: number,
+  ) {
     return await this.ejercicioService.getEjercicio(id);
   }
 

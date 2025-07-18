@@ -13,6 +13,7 @@ import {
   ForbiddenException,
   HttpStatus,
   UsePipes,
+  UseInterceptors,
 } from '@nestjs/common';
 import { EjercicioService } from './ejercicio.service';
 
@@ -38,6 +39,7 @@ import { HttpExceptionFilter } from 'src/common/exceptions/http.exception.filter
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { createEjercicioInSchema } from './schemas/create-ejercicio.schema';
 import { ValidationPipe } from 'src/common/pipes/validation.pipe';
+import { LoggingInterceptor } from 'src/common/interceptors/login.interceptor';
 
 @ApiBearerAuth()
 @ApiTags('v1/ejercicio')
@@ -45,6 +47,7 @@ import { ValidationPipe } from 'src/common/pipes/validation.pipe';
 //@UseFilters(new HttpExceptionFilter())
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Unautorized' })
+@UseInterceptors(LoggingInterceptor)
 @Controller('v1/ejercicio')
 export class EjercicioController {
   constructor(private readonly ejercicioService: EjercicioService) {}

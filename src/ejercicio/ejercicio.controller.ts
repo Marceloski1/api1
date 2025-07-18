@@ -40,6 +40,7 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { createEjercicioInSchema } from './schemas/create-ejercicio.schema';
 import { ValidationPipe } from 'src/common/pipes/validation.pipe';
 import { LoggingInterceptor } from 'src/common/interceptors/login.interceptor';
+import { EjercicioDecorator } from 'src/common/decorators/ejercicio.decorator';
 
 @ApiBearerAuth()
 @ApiTags('v1/ejercicio')
@@ -116,8 +117,18 @@ export class EjercicioController {
   }
 
   @Get('test-ejercicio')
-  @Rols(Role.ADMIN)
-  async getP() {
-    return 'Brrrr';
+  async getP(@EjercicioDecorator('ejercicio') ejercicio: string) {
+    //No funciona , revisar
+    console.log(ejercicio);
   }
+
+  /* Para trabajar con Pipes 
+  
+@Get()
+async findOnoEjercicio(
+  @User(new ValidationPipe({ validateCustomDecorators: true }))
+  ejercicio: Ejercicio,
+) {
+  console.log(ejercicio);
+}*/
 }

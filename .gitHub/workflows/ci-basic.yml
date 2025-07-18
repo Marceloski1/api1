@@ -1,0 +1,32 @@
+name: Basic-CI Example
+
+on:
+  push:
+    branches:
+      - feature
+  pull request:
+    branches:
+      - feature
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Chekout cod
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+
+        with:
+          node-version: 20.15.0
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Compilar TypeScript
+        run: npm run build
+
+      - name: Ejecutar pruebas
+        run: npm test

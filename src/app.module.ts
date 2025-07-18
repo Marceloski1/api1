@@ -39,7 +39,7 @@ import { AuthController } from './auth/auth.controller';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    //consumer.apply(LoggerMidleware).forRoutes('auth'); //Aplicar el middleware a toda la ruta
+    consumer.apply(LoggerMidleware).forRoutes('auth'); //Aplicar el middleware a toda la ruta
     //consumer.apply(LoggerMidleware).forRoutes({ path: 'v1/ejercicio', method: RequestMethod.GET }); // Aplicar la solicitud a un tipo de peticion
     //consumer.apply(LoggerMidleware).forRoutes({ path: 'auth/*splat', method: RequestMethod.POST }); //El middleware se ejecutara en cualquier ruta que inicie con lo señalado con splat
     //consumer.apply(LoggerMidleware).forRoutes(EjercicioController) ;

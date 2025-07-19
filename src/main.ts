@@ -8,9 +8,11 @@ const SWAGGER_PATH = '/doc';
 import * as cors from 'cors';
 import setupLogging from './config/loggin.setup';
 import { NotFoundException } from '@nestjs/common';
+import * as dotenv from 'dotenv';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  console.log(`./env/env.${process.env.NODE_ENV}.local`);
   const port = app.get(ConfigService).get<number>('APP_PORT');
   //app.useGlobalFilters(new HttpExceptionFilter());
   setupSwagger(app, SWAGGER_PATH);

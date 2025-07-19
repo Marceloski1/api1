@@ -17,6 +17,8 @@ import LoggerMidleware from './common/middlewares/logger.middleware';
 import { EjercicioController } from './ejercicio/ejercicio.controller';
 import { AuthController } from './auth/auth.controller';
 
+const envFilePath = `./env/env.${process.env.NODE_ENV}.local`;
+
 @Module({
   imports: [
     ConfigModule.forRoot({

@@ -38,8 +38,7 @@ import { UpdateEjercicioInDto } from './dto/in/update-ejercicio.dto';
 import { HttpExceptionFilter } from 'src/common/exceptions/http.exception.filter';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { createEjercicioInSchema } from './schemas/create-ejercicio.schema';
-import { ValidationPipe } from 'src/common/pipes/validation.pipe';
-import { LoggingInterceptor } from 'src/common/interceptors/login.interceptor';
+//import { ValidationPipe } from 'src/common/pipes/validation.pipe';
 import { EjercicioDecorator } from 'src/common/decorators/ejercicio.decorator';
 
 @ApiBearerAuth()
@@ -48,7 +47,6 @@ import { EjercicioDecorator } from 'src/common/decorators/ejercicio.decorator';
 //@UseFilters(new HttpExceptionFilter())
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Unautorized' })
-@UseInterceptors(LoggingInterceptor)
 @Controller('v1/ejercicio')
 export class EjercicioController {
   constructor(private readonly ejercicioService: EjercicioService) {}
@@ -63,9 +61,7 @@ export class EjercicioController {
     description: 'Conflict (Other user with name or Email)',
   })
   //@UsePipes(new ZodValidationPipe(createEjercicioInSchema))
-  async create(
-    @Body(new ValidationPipe()) createEjercicioDto: CreateEjercicioInDto,
-  ) {
+  async create(@Body() createEjercicioDto: CreateEjercicioInDto) {
     return await this.ejercicioService.createEjercicio(createEjercicioDto);
   }
 

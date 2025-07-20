@@ -10,6 +10,7 @@ import {
   UseGuards,
   HttpException,
   HttpStatus,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -34,7 +35,6 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Role, Rols } from 'src/common/decorators/rols.decorator';
 import ForgotPasswordInDto from './dto/in/forgotPassword.in.dto';
 import ResetPasswordInDto from './dto/in/reset-password.in.dto';
-import ForbiddenException from 'src/common/exceptions/forbidden.exception';
 
 @Controller('auth')
 export class AuthController {
@@ -47,29 +47,14 @@ export class AuthController {
   @ApiCreatedResponse({ description: 'Login successful', type: AuthOutDto })
   @ApiOperation({ summary: 'Autenticate into system' })
   async login(@Body() body: LoginInDto): Promise<AuthOutDto> {
-    try {
-      const { accessToken, refreshToken } = await this.authService.login(
-        body.email,
-        body.password,
-      );
-      return {
-        accessTokem: accessToken,
-        refreshToken: refreshToken,
-      };
-    } catch (err) {
-      /*throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Error, usuario no valido',
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: err,
-        },
-      );
-      */
-      throw new ForbiddenException(err);
-    }
+    const { accessToken, refreshToken } = await this.authService.login(
+      body.email,
+      body.password,
+    );
+    return {
+      accessTokem: accessToken,
+      refreshToken: refreshToken,
+    };
   }
 
   @Post('refresh')
@@ -103,6 +88,7 @@ export class AuthController {
   })
   @ApiBadRequestResponse({ description: 'Bad Request' })
   @ApiOperation({ summary: 'Register User' })
+  //@UseInterceptors(TokenInterceptor)
   async register(@Body() dto: RegisterInDto): Promise<UserOutDto> {
     return this.authService.register(dto);
   }

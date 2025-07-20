@@ -16,6 +16,10 @@ import { ReportsModule } from './reports/reports.module';
 import LoggerMidleware from './common/middlewares/logger.middleware';
 import { EjercicioController } from './ejercicio/ejercicio.controller';
 import { AuthController } from './auth/auth.controller';
+import { globalInterceptor } from './common/providers/interceptors-global.provider';
+import { globalFilter } from './common/providers/filters-global.provider';
+import { AuthMiddleware } from './common/middlewares/auth.middleware';
+import { CheckAdminMiddleware } from './common/middlewares/check-admin.middleware';
 
 const envFilePath = `./env/env.${process.env.NODE_ENV}.local`;
 
@@ -38,10 +42,15 @@ const envFilePath = `./env/env.${process.env.NODE_ENV}.local`;
     MailModule,
     ReportsModule,
   ],
+  providers: [...globalInterceptor],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMidleware).forRoutes('auth'); //Aplicar el middleware a toda la ruta
+    consumer
+      .apply(LoggerMidleware)
+      .forRoutes({ path: `v1/ejercicio`, method: RequestMethod.ALL });
+    consumer.apply(AuthMiddleware, CheckAdminMiddleware).forRoutes('v1/users');
+    //consumer.apply(LoggerMidleware).forRoutes('auth'); //Aplicar el middleware a toda la ruta
     //consumer.apply(LoggerMidleware).forRoutes({ path: 'v1/ejercicio', method: RequestMethod.GET }); // Aplicar la solicitud a un tipo de peticion
     //consumer.apply(LoggerMidleware).forRoutes({ path: 'auth/*splat', method: RequestMethod.POST }); //El middleware se ejecutara en cualquier ruta que inicie con lo señalado con splat
     //consumer.apply(LoggerMidleware).forRoutes(EjercicioController) ;

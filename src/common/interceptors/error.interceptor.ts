@@ -5,7 +5,7 @@ import {
   BadGatewayException,
 } from '@nestjs/common';
 import { catchError, Observable, throwError } from 'rxjs';
-
+/*
 export class ErrorInterceptor implements NestInterceptor {
   intercept(
     context: ExecutionContext,
@@ -16,3 +16,4 @@ export class ErrorInterceptor implements NestInterceptor {
       .pipe(catchError((err) => throwError(() => new BadGatewayException())));
   }
 }
+  */

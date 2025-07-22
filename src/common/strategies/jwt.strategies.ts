@@ -10,6 +10,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken() || 'cc',
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('SECRET_KEY') || 'rwfc',
+      signOptions: { expirexIn: '1d' }, ///Revisar el tiempo de expiracion en la JWTStrategy no cree conflicto con otro expireIn por si puse uno sin darme cuenta
     });
   }
   async validate(payload: any) {

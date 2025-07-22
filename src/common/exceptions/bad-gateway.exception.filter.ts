@@ -1,15 +1,17 @@
 import {
   ArgumentsHost,
+  BadGatewayException,
   Catch,
   ExceptionFilter,
-  HttpException,
+  NotFoundException,
 } from '@nestjs/common';
-import path from 'path';
 import { Request, Response } from 'express';
+import path from 'path';
+import { timestamp } from 'rxjs';
 
-@Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
+@Catch(BadGatewayException)
+export class BadGatewayExceptionFilter implements ExceptionFilter {
+  catch(exception: BadGatewayException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
